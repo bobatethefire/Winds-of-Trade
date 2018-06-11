@@ -1,0 +1,8 @@
+
+
+class Item():
+
+    def __init__(self,baseprice):
+        self.base_price = baseprice
+
+        
