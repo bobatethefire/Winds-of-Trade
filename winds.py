@@ -8,18 +8,18 @@ import Player
 import Item
 import Building
 import Menu
- 
+
 #actual size of the window
 SCREEN_WIDTH = 80
 SCREEN_HEIGHT = 50
 
 MAP_HEIGHT = 50
 MAP_WIDTH = 60
- 
+
 LIMIT_FPS = 20  #20 frames-per-second maximum
 
 VERSION = 'Pre-ALPHA 0.2'
-            
+
 ##Generates a map based on given parameters
 def create_map():
     #Create The Map
@@ -36,7 +36,7 @@ def create_map():
     #Generate Contents in Map
     generate_land()
     generate_cities()
-    
+
 ##Generates the land masss
 ##Currently just generates a square island
 def generate_land():
@@ -54,7 +54,7 @@ def generate_cities():
     direction = random.randint(0,1)
     if direction == 0:
         direction = -1
-        
+
     yGuess = MAP_HEIGHT/2
     xGuess = 10
 
@@ -71,18 +71,18 @@ def generate_cities():
             elif yGuess < 0:
                 yGuess = MAP_HEIGHT/2 + 1
                 direction = 1
-                
+
 
     #We have found a place to put a city, so lets put one there
     continent_map[xGuess][yGuess].type = "City"
     #Generate the city, and add it to the list
     city = Cities.City(200)
-    cities.append(city)    
+    cities.append(city)
 
 ##Draws the Right Info Panel
 def draw_GUI():
     global GUI_info
-    
+
     current_menu.draw(side_panel,GUI_info)
 
     #Blit the contents to the root console
@@ -96,11 +96,11 @@ def render_all():
     for x in range(MAP_WIDTH):
         for y in range(MAP_HEIGHT):
                 continent_map[x][y].draw(con,x,y)
- 
+
     #draw all objects in the list
     if draw_cursor:
         cursor.draw(con)
- 
+
     #blit the contents of "con" to the root console
     libtcod.console_blit(con, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, 0)
 
@@ -108,7 +108,7 @@ def render_all():
     libtcod.console_set_default_background(side_panel,libtcod.black)
     libtcod.console_clear(side_panel)
     draw_GUI()
-    
+
 ##Handles all the input from the event handler
 ##Right now controls how they are handled
 def handle_keys():
@@ -118,16 +118,16 @@ def handle_keys():
     global draw_cursor
     #Gets current menu to make sure we haven't tryed to change
     menu_string = current_menu.title
-    
+
     key = libtcod.console_check_for_keypress()  #real-time
- 
+
     if key.vk == libtcod.KEY_ENTER and key.lalt:
         #Alt+Enter: toggle fullscreen
         libtcod.console_set_fullscreen(not libtcod.console_is_fullscreen())
- 
+
     elif key.vk == libtcod.KEY_ESCAPE:
         return True  #exit game
-    
+
     #Handle the key press with the Event Handler
     key_press = E.return_key()
     #Pass that to the menu to figure out what to do with it
@@ -141,8 +141,8 @@ def handle_keys():
     #Do we need to change our menu? Also check to make sure its not a null pointer
     if menu_string != current_menu.title and menu_string is not None :
         current_menu = menus[menu_string]
-           
- 
+
+
 #############################################
 # Initialization & Main Loop
 #############################################
@@ -155,7 +155,7 @@ con = libtcod.console_new(SCREEN_WIDTH, SCREEN_HEIGHT)
 
 #Defining the left panel that is used for the Menus
 side_panel = libtcod.console_new(SCREEN_WIDTH-MAP_WIDTH,SCREEN_HEIGHT)
- 
+
 #Creating the cursor object
 cursor_location = [0,0]
 cursor = Object.Object(cursor_location[0],cursor_location[1],'X',libtcod.yellow)
@@ -182,17 +182,17 @@ GUI_info = {"Player":player,
 
 
 while not libtcod.console_is_window_closed():
- 
+
     #render the screen
     render_all()
     libtcod.console_flush()
- 
+
     #erase all objects at their old locations, before they move
     if draw_cursor:
         cursor.clear(con)
- 
+
     #handle keys and exit game if needed
-    
+
     exit = handle_keys()
     if exit:
         break

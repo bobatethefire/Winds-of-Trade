@@ -20,7 +20,7 @@ class City:
         self.population = population
         self.name = generate_name()
         self.buildings = generate_buildings()
-        self.description = generate_description()      
+        self.description = generate_description()
 
     ##Returns information usefull to know
     def info(self):
@@ -42,5 +42,4 @@ def generate_description():
 ##Generates buildings for the city
 ##Currently just adds a market
 def generate_buildings():
-    return [Building.Market({Item.Apple(50,"Mich."):10})]
-    
+    return [Building.Market({Item.Apple(10,"Mich."):10,Item.Bread(15,"France"):7})]

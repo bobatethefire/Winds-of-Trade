@@ -1,7 +1,8 @@
 import libtcodpy as libtcod
-##import Player
+import Utilities as U
 import Object
 import textwrap
+import Building
 
 ###Defines the Menu Class
 class Menu():
@@ -18,11 +19,11 @@ class Menu():
         libtcod.console_set_default_foreground(console, libtcod.white)
         libtcod.console_print_ex(console, 0, 0, libtcod.BKGND_NONE,libtcod.LEFT,self.title)
     ##Handles the input for a given menu, given a key_press
-    ##Default method incase subclass doesn't need it    
+    ##Default method incase subclass doesn't need it
     def handle_input(self,key_press,info):
-        
+
         return "None"
-    
+
 ###Main Map that you see during gameplay
 class Overview_Map_Menu(Menu):
 
@@ -46,13 +47,13 @@ class Overview_Map_Menu(Menu):
             return "Inventory"
         elif key_press == 'k':
             return "Look"
-    
+
 ###The inventory of the player
 class Inventory_Menu(Menu):
 
     def __init__(self):
         Menu.__init__(self,"Inventory")
-        
+
     #Overide
     def draw(self,console,info):
         player = info["Player"]
@@ -70,12 +71,12 @@ class Inventory_Menu(Menu):
     def handle_input(self,key_press,info):
         if key_press == 'i':
             return "Overview Map"
-        
+
 ###The menu while you are looking around the overview map
 class Look_Menu(Menu):
 
     def __init__(self):
-        Menu.__init__(self,"Look")      
+        Menu.__init__(self,"Look")
     #Overide
     def draw(self,console,info):
         tile_map = info["Map"]
@@ -114,20 +115,20 @@ class City_Menu(Menu):
     #Overide
     def draw(self,console,info):
         city = info["City"]
-        
+
         libtcod.console_set_default_foreground(console, libtcod.red)
 
         #Get relivent information
         name = city.name
         description_list = textwrap.wrap(city.description,20)
         d_len = len(description_list)
-        pop = city.population 
-        
+        pop = city.population
+
         #Writes the city
         libtcod.console_print_ex(console, 0, 0, libtcod.BKGND_NONE,libtcod.LEFT,name)
         libtcod.console_print_ex(console, 0, 1, libtcod.BKGND_NONE,libtcod.LEFT,"--------------------")
         #Writes the description
-        for i in range(d_len):        
+        for i in range(d_len):
             libtcod.console_print_ex(console, 0, 2+i, libtcod.BKGND_NONE,libtcod.LEFT,description_list[i])
         #Writes the population
         libtcod.console_print_ex(console, 0, d_len+3, libtcod.BKGND_NONE,libtcod.LEFT,'Population: '+str(pop))
@@ -140,7 +141,7 @@ class City_Menu(Menu):
     def handle_input(self,key_press,info):
         cursor = info["Cursor"]
         buildings = info["City"].buildings
-        
+
         #Moving the cursor will change it back to the look menu
         if key_press == "KEY_UP":
             cursor.move(0,-1)
@@ -157,7 +158,7 @@ class City_Menu(Menu):
 
         #Is key press a number and is it non-zero, the
         #only invalid number
-        if key_press.isDigit() and key_press != '0':
+        if U.isInt(key_press) and key_press != '0':
             building_String = buildings[int(key_press)-1].type
             return building_String
 
@@ -170,18 +171,19 @@ class Market_Menu(Menu):
 
         #Get the market object
         market = info["City"].buildings[0]
-        market_display = market.GUI_info
+        market_display = market.GUI_info()
+
         #Draw it
         libtcod.console_set_default_foreground(console, libtcod.red)
         for i in range(len(market_display)):
             libtcod.console_print_ex(console, 0, i, libtcod.BKGND_NONE,libtcod.LEFT,market_display[i])
     #Overide
     def handle_input(self,key_press,info):
+        if U.isInt(key_press):
+            print key_press
 
-        pass
-            
-        
-                
+
+
 ##Helper function to load all the neccescary menus for the main function
 def load_menus():
     return {"Overview Map":Overview_Map_Menu(),
@@ -189,7 +191,3 @@ def load_menus():
             "Inventory":Inventory_Menu(),
             "Look":Look_Menu(),
             "Market":Market_Menu()}
-    
-        
-
-

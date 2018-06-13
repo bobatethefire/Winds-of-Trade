@@ -25,12 +25,7 @@ def return_key():
     elif key_char =='i':
         key_pressed = "i"
 
-    #Check for number keys
-    if key_char.isDigit():
-        key_pressed = key_char
+    elif key_char == '1':
+        key_pressed = '1'
 
     return key_pressed
-    
-
-    
-    
